@@ -1,0 +1,52 @@
+# ============================================================================
+# Solvery Platform - Docker Configuration
+# ============================================================================
+# Пример конфигурации docker-compose.yml для пилотной версии.
+#
+# При необходимости в конфигурацию docker-compose.yml можно добавить RabbitMQ и PostgreSQL, однако это не рекомендуется для продакшена.
+#
+# ============================================================================
+
+services:
+  prime-api:
+    image: prime-api
+    container_name: prime-api
+    networks:
+      - prime-network
+    volumes:
+      - ./prime-api/.env:/usr/src/app/apps/prime-api/.env
+      - ./prime-api/cert.pem:/usr/src/app/apps/prime-api/cert.pem
+      - ./apps/prime-api/logs:/apps/prime-api/logs
+      - ./apps/prime-api/static:/usr/src/app/apps/prime-api/static
+    user: "1001:1001"
+
+  prime-client:
+    restart: always
+    image: prime-client
+    container_name: prime-client
+    networks:
+      - prime-network
+    volumes:
+      - ./apps/prime-client/.env:/usr/src/app/apps/prime-client/.env
+    depends_on:
+      - prime-api
+
+  nginx:
+    restart: always
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /etc/nginx/ssl:/etc/nginx/ssl
+    networks:
+      - prime-network
+    depends_on:
+      - prime-api
+      - prime-client
+
+networks:
+  prime-network:
+    driver: bridge
