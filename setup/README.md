@@ -76,7 +76,7 @@
 Создайте каталоги, которые монтируются в контейнеры согласно `docker-compose.yml`:
 
 ```bash
-mkdir -p prime-api apps/prime-api/logs apps/prime-api/static apps/prime-client nginx
+mkdir -p apps/prime-api apps/prime-api/logs apps/prime-api/static apps/prime-client nginx
 ```
 
 При необходимости создайте каталог для SSL-сертификатов на хосте (например, `/etc/nginx/ssl`) — в примере nginx монтирует его в контейнер. Права доступа должны позволять чтение конфигурации nginx.
@@ -86,13 +86,13 @@ mkdir -p prime-api apps/prime-api/logs apps/prime-api/static apps/prime-client n
 Создайте рабочие файлы `.env` из примеров:
 
 ```bash
-cp prime-api.env.example prime-api/.env
+cp prime-api.env.example apps/prime-api/.env
 cp prime-client.env.example apps/prime-client/.env
 ```
 
 Значения в этих файлах нужно будет задать в разделе [«Настройка и безопасность»](#4-настройка-и-безопасность). На этапе установки достаточно создать файлы.
 
-> _Опционально._ Если prime-api подключается к сервисам по HTTPS с самоподписанными сертификатами, положите файл сертификата CA в `prime-api/cert.pem` и укажите путь в `prime-api/.env` как `NODE_EXTRA_CA_CERTS`.
+> _Опционально._ Если prime-api подключается к сервисам по HTTPS с самоподписанными сертификатами, положите файл сертификата CA в `apps/prime-api/cert.pem` и укажите путь в `apps/prime-api/.env` как `NODE_EXTRA_CA_CERTS`.
 
 ### 3.4. Образы Docker
 
@@ -126,7 +126,7 @@ cp prime-client.env.example apps/prime-client/.env
 
 ### 4.1. Переменные окружения prime-api
 
-Редактируйте файл **`prime-api/.env`**.
+Редактируйте файл **`apps/prime-api/.env`**.
 
 **Обязательные переменные:**
 
@@ -174,7 +174,7 @@ _Опционально:_ `PORT`, `LOG_LEVEL`, пути логов, `IMAGE_STORA
 
 ## 5. Первый запуск и остановка
 
-> **Перед запуском проверьте:** заполнены обязательные переменные в `prime-api/.env` и `apps/prime-client/.env`; в `nginx/nginx.conf` указан ваш домен; сертификаты лежат в каталоге, смонтированном в nginx (например, `/etc/nginx/ssl`); PostgreSQL и RabbitMQ доступны с хоста, где запускаются контейнеры.
+> **Перед запуском проверьте:** заполнены обязательные переменные в `apps/prime-api/.env` и `apps/prime-client/.env`; в `nginx/nginx.conf` указан ваш домен; сертификаты лежат в каталоге, смонтированном в nginx (например, `/etc/nginx/ssl`); PostgreSQL и RabbitMQ доступны с хоста, где запускаются контейнеры.
 
 **Основные команды:**
 
